@@ -7,14 +7,12 @@
     <title>TikTok Downloader</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Reset some default styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Basic font and body styling */
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f0f0f0;
@@ -27,7 +25,6 @@
             margin: 0;
         }
 
-        /* Container for content */
         .container {
             text-align: center;
             background-color: #fff;
@@ -35,11 +32,10 @@
             border-radius: 10px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             position: relative;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
         }
 
-        /* Styling the heading */
         h1 {
             font-size: 30px;
             color: #333;
@@ -47,10 +43,9 @@
             font-weight: 600;
         }
 
-        /* Styling the input field */
         .input-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 500px;
             margin: 0 auto;
             margin-bottom: 20px;
         }
@@ -69,7 +64,6 @@
             border-color: #4bb543;
         }
 
-        /* Button styling */
         button {
             background-color: #4bb543;
             color: white;
@@ -85,14 +79,12 @@
             background-color: #45a340;
         }
 
-        /* Credit section */
         .credit {
             font-size: 14px;
             margin-top: 20px;
             color: #777;
         }
 
-        /* Result container */
         #result {
             margin-top: 20px;
             display: none;
@@ -114,7 +106,6 @@
             color: #4bb543;
         }
 
-        /* Loader container */
         .loader-container {
             display: none;
             justify-content: center;
@@ -139,13 +130,11 @@
             animation: spin 1s linear infinite;
         }
 
-        /* Spinner animation */
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        /* Background animation */
         .background-animation {
             position: absolute;
             top: 0;
@@ -200,7 +189,6 @@
             }
         }
 
-        /* Media queries for responsiveness */
         @media (max-width: 768px) {
             .container {
                 padding: 30px;
@@ -252,18 +240,41 @@
         <span></span>
         <span></span>
     </div>
-    
+
     <div class="container">
         <h1>Download TikTok Video</h1>
         <div class="input-container">
             <input type="text" id="tiktok-url" placeholder="Paste TikTok video URL here">
         </div>
-        <button id="download-button">Download Video</button>
+        <button id="download-button">Download</button>
 
         <div id="result" class="result">
             <p id="error"></p>
             <p id="success"></p>
-            <a href="#" id="download-link" target="_blank" style="display: none;">Download Now</a>
+            <table id="video-details" style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+                <tr>
+                    <td><strong>Thumbnail:</strong></td>
+                    <td><img id="thumbnail" src="" alt="Thumbnail" style="max-width: 150px; height: auto; border-radius: 10px;"></td>
+                </tr>
+                <tr>
+                    <td><strong>Author:</strong></td>
+                    <td><span id="author"></span></td>
+                </tr>
+                <tr>
+                    <td><strong>Title:</strong></td>
+                    <td><span id="title"></span></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button id="download-video" style="padding: 10px 20px; background-color: #4bb543; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                            Download Video
+                        </button>
+                        <button id="download-audio" style="padding: 10px 20px; background-color: #ff4b4b; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                            Download Audio
+                        </button>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <div class="loader-container" id="loader-container">
@@ -277,7 +288,6 @@
         document.getElementById("download-button").addEventListener("click", function () {
             var url = document.getElementById("tiktok-url").value;
             if (url) {
-                // Show the loader
                 document.getElementById("loader-container").classList.add("show");
                 document.getElementById("result").classList.remove("show");
                 document.getElementById("error").innerText = "";
@@ -291,23 +301,4 @@
                         document.getElementById("result").classList.add("show");
 
                         if (data.code === 0) {
-                            // Successful response
-                            document.getElementById("success").innerText = "Video Ready to Download!";
-                            document.getElementById("download-link").href = data.data.play;
-                            document.getElementById("download-link").style.display = "inline-block";
-                        } else {
-                            // Error response
-                            document.getElementById("error").innerText = "Failed to fetch video. Please try again.";
-                        }
-                    })
-                    .catch(error => {
-                        document.getElementById("loader-container").classList.remove("show");
-                        document.getElementById("error").innerText = "Error: Unable to fetch video.";
-                    });
-            } else {
-                alert("Please enter a TikTok video URL.");
-            }
-        });
-    </script>
-</body>
-</html>
+                            document.getElementById("success").innerText = "Video Ready
