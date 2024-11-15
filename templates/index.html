@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Downloader</title>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>TikTok Downloader</h1>
+        <div class="input-container">
+            <input type="text" id="videoUrl" placeholder="Enter TikTok video URL">
+        </div>
+        <button onclick="fetchVideo()">Download</button>
+        <div id="result" style="display: none;">
+            <table>
+                <tr>
+                    <td><img id="cover" alt="Thumbnail" width="100"></td>
+                    <td>
+                        <p><strong>Author:</strong> <span id="author"></span></p>
+                        <p><strong>Title:</strong> <span id="title"></span></p>
+                    </td>
+                    <td>
+                        <button id="audioBtn">Audio</button>
+                        <button id="videoBtn">Video</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function fetchVideo() {
+            const videoUrl = document.getElementById('videoUrl').value;
+
+            fetch('/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: videoUrl })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Populate data
+                document.getElementById('cover').src = data.cover;
+                document.getElementById('author').textContent = data.author;
+                document.getElementById('title').textContent = data.title;
+
+                // Set download links
+                document.getElementById('audioBtn').onclick = () => window.location.href = `/download/audio?url=${encodeURIComponent(data.music)}`;
+                document.getElementById('videoBtn').onclick = () => window.location.href = `/download/video?url=${encodeURIComponent(data.play)}`;
+
+                // Show result table
+                document.getElementById('result').style.display = 'block';
+            })
+            .catch(err => alert('Failed to fetch video data'));
+        }
+    </script>
+</body>
+</html>
