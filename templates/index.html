@@ -185,7 +185,7 @@
                             });
 
                             document.getElementById("download-audio").addEventListener("click", function () {
-                                var audioUrl = data.data.music.play;
+                                var audioUrl = data.data.music;
                                 var a = document.createElement("a");
                                 a.href = audioUrl;
                                 a.download = data.data.title + ".mp3"; // Menyertakan nama file audio
