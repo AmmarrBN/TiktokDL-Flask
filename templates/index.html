@@ -301,4 +301,41 @@
                         document.getElementById("result").classList.add("show");
 
                         if (data.code === 0) {
-                            document.getElementById("success").innerText = "Video Ready
+                            document.getElementById("success").innerText = "Video Ready to Download!";
+                            
+                            // Menampilkan thumbnail, author, dan title
+                            document.getElementById("thumbnail").src = data.data.thumb;
+                            document.getElementById("author").innerText = data.data.author;
+                            document.getElementById("title").innerText = data.data.title;
+
+                            // Menambahkan URL untuk tombol download Video dan Audio
+                            document.getElementById("download-video").addEventListener("click", function () {
+                                var videoUrl = data.data.play;
+                                var a = document.createElement("a");
+                                a.href = videoUrl;
+                                a.download = data.data.title + ".mp4"; // Menyertakan nama file video
+                                a.click();
+                            });
+
+                            document.getElementById("download-audio").addEventListener("click", function () {
+                                var audioUrl = data.data.audio;
+                                var a = document.createElement("a");
+                                a.href = audioUrl;
+                                a.download = data.data.title + ".mp3"; // Menyertakan nama file audio
+                                a.click();
+                            });
+                        } else {
+                            document.getElementById("error").innerText = "Failed to fetch video. Please try again.";
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById("loader-container").classList.remove("show");
+                        document.getElementById("error").innerText = "Error: Unable to fetch video.";
+                    });
+            } else {
+                alert("Please enter a TikTok video URL.");
+            }
+        });
+    </script>
+</body>
+</html>
