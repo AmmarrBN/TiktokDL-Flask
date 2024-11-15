@@ -1,57 +1,42 @@
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, request, jsonify, render_template
 import requests
-import os
 
 app = Flask(__name__)
 
-# Helper function to fetch TikTok video data
-def fetch_tiktok_data(url):
-    api_url = f"https://tikwm.com/api/?url={url}"
-    response = requests.get(api_url)
-    if response.status_code == 200:
-        return response.json()
-    return None
+# API URL for fetching video data
+API_URL = "https://tikwm.com/api/"
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html')  # Serve the frontend HTML page
 
 @app.route('/download', methods=['POST'])
-def download():
-    video_url = request.json.get('url')
+def download_video():
+    video_url = request.form.get('videoUrl')
+
     if not video_url:
-        return jsonify({'error': 'URL is required'}), 400
+        return jsonify({'error': 'Please provide a TikTok video URL.'}), 400
     
-    data = fetch_tiktok_data(video_url)
-    if not data or data.get('code') != 0:
-        return jsonify({'error': 'Failed to fetch TikTok video data'}), 500
-
-    video_data = data['data']
-    return jsonify({
-        'author': video_data['author']['nickname'],
-        'title': video_data['title'],
-        'cover': video_data['cover'],
-        'music': video_data['music'],
-        'play': video_data['play']
-    })
-
-@app.route('/download/<media_type>', methods=['GET'])
-def download_file(media_type):
-    url = request.args.get('url')
-    if not url or media_type not in ['audio', 'video']:
-        return "Invalid request", 400
+    # Call the TikTok API to fetch video data
+    response = requests.get(f'{API_URL}?url={video_url}')
     
-    file_extension = 'mp3' if media_type == 'audio' else 'mp4'
-    file_name = f"download.{file_extension}"
+    if response.status_code != 200:
+        return jsonify({'error': 'Failed to fetch video details.'}), 500
+    
+    data = response.json()
 
-    # Download the file
-    response = requests.get(url, stream=True)
-    if response.status_code == 200:
-        with open(file_name, 'wb') as f:
-            for chunk in response.iter_content(1024):
-                f.write(chunk)
-        return send_file(file_name, as_attachment=True)
-    return "Failed to download file", 500
+    if data['code'] != 0:
+        return jsonify({'error': data['msg']}), 500
+
+    video_data = {
+        'title': data['data']['title'],
+        'cover': data['data']['cover'],
+        'video_url': data['data']['play'],
+        'music_url': data['data']['music'],
+        'music_title': data['data']['music_info']['title']
+    }
+    
+    return jsonify(video_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
