@@ -3,131 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>TikTok Downloader</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>TikTok Video Downloader</title>
     <style>
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            margin: 0;
         }
 
         .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 50px auto;
             text-align: center;
             background-color: #fff;
-            padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            position: relative;
-            max-width: 600px;
-            width: 100%;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            font-size: 30px;
+            font-size: 32px;
             color: #333;
-            margin-bottom: 20px;
-            font-weight: 600;
         }
 
-        .input-container {
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            margin-bottom: 20px;
-        }
-
-        input[type="text"] {
-            width: 100%;
+        input {
+            width: 80%;
             padding: 10px;
-            font-size: 16px;
-            border: 2px solid #ccc;
+            margin: 15px 0;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            outline: none;
-            transition: border 0.3s ease;
-        }
-
-        input[type="text"]:focus {
-            border-color: #4bb543;
+            font-size: 16px;
         }
 
         button {
-            background-color: #4bb543;
-            color: white;
-            padding: 12px 30px;
+            padding: 10px 20px;
             font-size: 16px;
             border: none;
             border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #45a340;
+            background-color: #45a049;
         }
 
-        .credit {
-            font-size: 14px;
-            margin-top: 20px;
-            color: #777;
-        }
-
-        #result {
-            margin-top: 20px;
+        .hidden {
             display: none;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        #result.show {
-            display: block;
-        }
-
-        #error {
-            color: #ff4b4b;
-        }
-
-        #success {
-            color: #4bb543;
         }
 
         .loader-container {
             display: none;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-        }
-
-        .loader-container.show {
-            display: flex;
+            margin-top: 20px;
         }
 
         .loader {
             border: 8px solid #f3f3f3;
-            border-top: 8px solid #4bb543;
+            border-top: 8px solid #3498db;
             border-radius: 50%;
             width: 40px;
             height: 40px;
-            animation: spin 1s linear infinite;
+            animation: spin 2s linear infinite;
         }
 
         @keyframes spin {
@@ -135,177 +74,105 @@
             100% { transform: rotate(360deg); }
         }
 
-        .background-animation {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            pointer-events: none;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            opacity: 0.1;
+        .error {
+            color: red;
+            font-size: 16px;
+            margin-top: 20px;
         }
 
-        .background-animation span {
-            background-color: #4bb543;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            animation: float 3s ease-in-out infinite;
+        .success {
+            color: green;
+            font-size: 16px;
+            margin-top: 20px;
         }
 
-        .background-animation span:nth-child(1) {
-            animation-delay: 0s;
+        #video-info-table {
+            width: 100%;
+            margin-top: 20px;
+            text-align: left;
+            border-collapse: collapse;
         }
 
-        .background-animation span:nth-child(2) {
-            animation-delay: 0.5s;
+        #video-info-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
         }
 
-        .background-animation span:nth-child(3) {
-            animation-delay: 1s;
+        #download-video, #download-audio {
+            padding: 10px 15px;
+            margin-top: 10px;
+            background-color: #007BFF;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
         }
 
-        .background-animation span:nth-child(4) {
-            animation-delay: 1.5s;
+        #download-video:hover, #download-audio:hover {
+            background-color: #0056b3;
         }
 
-        .background-animation span:nth-child(5) {
-            animation-delay: 2s;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-            100% {
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            input[type="text"] {
-                font-size: 14px;
-            }
-
-            button {
-                font-size: 14px;
-                padding: 10px 25px;
-            }
-
-            .credit {
-                font-size: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 20px;
-            }
-
-            input[type="text"] {
-                font-size: 12px;
-            }
-
-            button {
-                font-size: 12px;
-                padding: 8px 20px;
-            }
+        #thumbnail {
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="background-animation">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-
     <div class="container">
-        <h1>Download TikTok Video</h1>
-        <div class="input-container">
-            <input type="text" id="tiktok-url" placeholder="Paste TikTok video URL here">
-        </div>
-        <button id="download-button">Download</button>
+        <h1>TikTok Downloader</h1>
+        <input type="text" id="url-input" placeholder="Paste TikTok URL here">
+        <button id="download-btn">Download</button>
 
-        <div id="result" class="result">
-            <p id="error"></p>
-            <p id="success"></p>
-            <table id="video-details" style="width: 100%; margin-top: 20px; border-collapse: collapse;">
-                <tr>
-                    <td><strong>Thumbnail:</strong></td>
-                    <td><img id="thumbnail" src="" alt="Thumbnail" style="max-width: 150px; height: auto; border-radius: 10px;"></td>
-                </tr>
-                <tr>
-                    <td><strong>Author:</strong></td>
-                    <td><span id="author"></span></td>
-                </tr>
-                <tr>
-                    <td><strong>Title:</strong></td>
-                    <td><span id="title"></span></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button id="download-video" style="padding: 10px 20px; background-color: #4bb543; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">
-                            Download Video
-                        </button>
-                        <button id="download-audio" style="padding: 10px 20px; background-color: #ff4b4b; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">
-                            Download Audio
-                        </button>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="loader-container" id="loader-container">
+        <div id="loader-container" class="loader-container">
             <div class="loader"></div>
         </div>
 
-        <div class="credit">Powered by TikWM API</div>
+        <div id="error" class="error"></div>
+
+        <div id="success" class="success"></div>
+
+        <table id="video-info-table" class="hidden">
+            <tr>
+                <td>Thumbnail</td>
+                <td><img id="thumbnail" src="" alt="Video Thumbnail" width="100"></td>
+            </tr>
+            <tr>
+                <td>Author</td>
+                <td id="author"></td>
+            </tr>
+            <tr>
+                <td>Title</td>
+                <td id="title"></td>
+            </tr>
+            <tr>
+                <td>Actions</td>
+                <td>
+                    <button id="download-video">Download Video</button>
+                    <button id="download-audio">Download Audio</button>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <script>
-        document.getElementById("download-button").addEventListener("click", function () {
-            var url = document.getElementById("tiktok-url").value;
+        document.getElementById("download-btn").addEventListener("click", function () {
+            var url = document.getElementById("url-input").value.trim();
             if (url) {
                 document.getElementById("loader-container").classList.add("show");
-                document.getElementById("result").classList.remove("show");
                 document.getElementById("error").innerText = "";
                 document.getElementById("success").innerText = "";
 
-                // API request to fetch the video details
                 fetch(`https://tikwm.com/api/?url=${encodeURIComponent(url)}`)
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById("loader-container").classList.remove("show");
-                        document.getElementById("result").classList.add("show");
 
                         if (data.code === 0) {
-                            document.getElementById("success").innerText = "Video Ready to Download!";
-                            
-                            // Menampilkan thumbnail, author, dan title
-                            document.getElementById("thumbnail").src = data.data.thumb;
-                            document.getElementById("author").innerText = data.data.author;
+                            // Tampilkan informasi video
+                            document.getElementById("video-info-table").classList.remove("hidden");
+
+                            // Mengisi data dari API
+                            document.getElementById("thumbnail").src = data.data.cover;  // Menggunakan cover sebagai thumbnail
+                            document.getElementById("author").innerText = data.data.author.nickname;  // Menggunakan author.nickname
                             document.getElementById("title").innerText = data.data.title;
 
                             // Menambahkan URL untuk tombol download Video dan Audio
@@ -318,12 +185,14 @@
                             });
 
                             document.getElementById("download-audio").addEventListener("click", function () {
-                                var audioUrl = data.data.audio;
+                                var audioUrl = data.data.music.play;
                                 var a = document.createElement("a");
                                 a.href = audioUrl;
                                 a.download = data.data.title + ".mp3"; // Menyertakan nama file audio
                                 a.click();
                             });
+
+                            document.getElementById("success").innerText = "Video Ready to Download!";
                         } else {
                             document.getElementById("error").innerText = "Failed to fetch video. Please try again.";
                         }
